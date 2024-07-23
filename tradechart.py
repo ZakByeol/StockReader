@@ -18,6 +18,7 @@ import mplfinance as mpf  # 금융 차트를 그리기 위한 라이브러리
 import pandas as pd  # 데이터 조작 및 분석을 위한 라이브러리
 import numpy as np  # 수치 연산을 위한 라이브러리
 from datetime import datetime, timedelta  # 날짜 및 시간 조작을 위한 모듈
+import matplotlib.pyplot as plt  # 차트를 그리기 위한 모듈
 
 # 기간 차트 선택
 # FinaceDataReader를 사용해, 해당 기간의 주식 데이터를 return 함
@@ -131,13 +132,15 @@ def plot_stock_chart(ticker, period, trend):
         legend.extend(['EMA20 (purple)', 'EMA50 (red)', 'EMA60 (orange)', 'EMA100 (blue)', 'EMA120 (green)', 'Parabolic SAR (black)'])  # 범례 추가
 
     # RSI 과매도/과매수 구간 표시
+    # Handle potential empty arrays for overbought and oversold
     overbought = data['close'].where(data['RSI'] > 70, np.nan)  # RSI 70 이상인 지점 (과매수)
     oversold = data['close'].where(data['RSI'] < 30, np.nan)  # RSI 30 이하인 지점 (과매도)
-    apds.extend([
-        mpf.make_addplot(overbought, type='scatter', markersize=50, marker='^', color='purple'),  # 과매수 지점 표시
-        mpf.make_addplot(oversold, type='scatter', markersize=50, marker='v', color='lime')  # 과매도 지점 표시
-    ])
-    legend.extend(['Overbought (purple)', 'Oversold (lime)'])  # 범례 추가
+    if not np.isnan(overbought).all():  # Check if overbought array is not all NaN
+        apds.append(mpf.make_addplot(overbought, type='scatter', markersize=50, marker='^', color='purple'))  # 과매수 지점 표시
+        legend.append('Overbought (purple)')
+    if not np.isnan(oversold).all():  # Check if oversold array is not all NaN
+        apds.append(mpf.make_addplot(oversold, type='scatter', markersize=50, marker='v', color='lime'))  # 과매도 지점 표시
+        legend.append('Oversold (lime)')
 
     # 차트 그리기
     fig, axes = mpf.plot(data, type='candle', style='yahoo',title=f"\n{ticker} Stock Price - {period} ({trend} trend)",volume=True, figsize=(12, 8),addplot=apds, returnfig=True)  # 캔들스틱 차트 생성
@@ -162,7 +165,7 @@ period = period_map.get(period_choice)  # 선택된 기간 가져오기
 print("추세를 선택하세요:")
 print("1. 단기 추세")
 print("2. 장기 추세")
-trend_choice = input("선택 (1-2): ")  # 사용자로부터 추세 분석 방법 선택 받기
+trend_choice = input("선택 (1-2): ")  # 사용자로부터 추세 선택 받기
 
 trend_map = {'1': 'short', '2': 'long'}  # 사용자 입력을 추세 문자열로 매핑
 trend = trend_map.get(trend_choice)  # 선택된 추세 가져오기
