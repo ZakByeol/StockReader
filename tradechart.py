@@ -162,7 +162,7 @@ period = period_map.get(period_choice)  # 선택된 기간 가져오기
 print("추세를 선택하세요:")
 print("1. 단기 추세")
 print("2. 장기 추세")
-trend_choice = input("선택 (1-2): ")  # 사용자로부터 추세 선택 받기
+trend_choice = input("선택 (1-2): ")  # 사용자로부터 추세 분석 방법 선택 받기
 
 trend_map = {'1': 'short', '2': 'long'}  # 사용자 입력을 추세 문자열로 매핑
 trend = trend_map.get(trend_choice)  # 선택된 추세 가져오기
