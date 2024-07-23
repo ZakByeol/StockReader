@@ -148,7 +148,7 @@ def plot_stock_chart(ticker, period, trend):
     plt.show()  # 차트 표시
 
 # 메인 프로그램
-ticker = input("주식 코드를 입력하세요 (예: 005930 for Samsung Electronics, AAPL for Apple Inc.): ")  # 사용자로부터 주식 코드 입력 받기
+ticker = input("주식 코드를 입력하세요 (예: 국내주식은 상장코드로, 해외주식은 주식코드로 입력): ")  # 사용자로부터 주식 코드 입력 받기
 print("기간을 선택하세요:")
 print("1. 1주 (1W)")
 print("2. 1달 (1M)")
